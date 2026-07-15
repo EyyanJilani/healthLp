@@ -56,7 +56,7 @@ export default function PricingSection() {
       className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 transition-colors duration-300"
       id="pricing"
     >
-      <div className="w-full max-w-6xl mx-auto px-5">
+      <div className="w-full max-w-7xl mx-auto px-5">
         <p className="inline-flex items-center gap-1.5 font-semibold text-xs uppercase tracking-wider text-cyan-700 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-100 dark:border-cyan-900/30 px-3.5 py-1.5 rounded-full mb-4">
           Packages
         </p>

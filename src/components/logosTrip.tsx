@@ -33,7 +33,7 @@ export default function LogosTrip() {
       <Splide
         options={{
           type: "loop",
-          perPage: 8,
+          perPage: 10,
           gap: "2rem",
           arrows: false,
           pagination: false,

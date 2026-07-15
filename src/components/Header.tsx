@@ -50,7 +50,7 @@ export default function Header() {
       }`}
       id="top"
     >
-      <div className="w-full max-w-6xl mx-auto px-5 h-[70px] flex items-center justify-between">
+      <div className="w-full max-w-7xl mx-auto px-5 h-[70px] flex items-center justify-between">
         <a className="flex items-center gap-2.5 text-slate-900 dark:text-slate-50 font-display group" href="#top" aria-label="Digital Paradigm Health home">
           <span className="w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-br from-cyan-800 via-cyan-700 to-teal-700 text-white shadow-md shadow-cyan-500/20 group-hover:scale-105 transition-transform" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 32 32" fill="none">

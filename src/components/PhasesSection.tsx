@@ -28,7 +28,7 @@ export default function PhasesSection() {
       <span className="absolute top-10 w-1/5 right-0 opacity-70 pointer-events-none select-none">
         <img className="w-full h-full" src={DesignElement} alt="" />
       </span>
-      <div className="w-full max-w-6xl mx-auto px-5">
+      <div className="w-full max-w-7xl mx-auto px-5">
         <p className="inline-flex items-center gap-1.5 font-semibold text-xs uppercase tracking-wider text-cyan-700 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-100 dark:border-cyan-900/30 px-3.5 py-1.5 rounded-full mb-4">
           How we work
         </p>

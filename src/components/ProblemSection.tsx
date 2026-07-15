@@ -20,7 +20,7 @@ export default function ProblemSection() {
 
       <div className="max-w-7xl mx-auto px-5 relative z-10">
         <div className="text-center">
-          <p className="text-base md:text-lg mb-2 text-[#ef2f6b] dark:text-rose-400 font-semibold uppercase tracking-wider">
+          <p className="text-base md:text-lg mb-2 text-cyan-700 dark:text-rose-400 font-semibold uppercase tracking-wider">
             Clinics Grow with Technology
           </p>
           <h2 className="text-slate-900 dark:text-white md:text-5xl text-3xl font-black font-display tracking-tight mb-6">
@@ -35,7 +35,7 @@ export default function ProblemSection() {
           <div className="flex flex-col space-y-6 md:w-[32%] lg:w-[28%] z-10">
             <article className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-7 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-cyan-950/10 transition-all duration-300 hover:-translate-y-1 group">
               <Brain
-                className="w-8 h-8 mb-4 text-[#ef2f6b] dark:text-rose-400 group-hover:scale-110 transition-transform duration-300"
+                className="w-8 h-8 mb-4 text-cyan-700 dark:text-rose-400 group-hover:scale-110 transition-transform duration-300"
                 aria-hidden="true"
               />
               <h3 className="text-lg md:text-xl font-bold font-display text-slate-900 dark:text-white mb-2 leading-snug">
@@ -48,7 +48,7 @@ export default function ProblemSection() {
                 convert visitors into patient appointments.
               </p>
               <a
-                className="text-[#ef2f6b] hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
+                className="text-cyan-700 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
                 href="#contact"
               >
                 Read More{" "}
@@ -60,7 +60,7 @@ export default function ProblemSection() {
 
             <article className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-7 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-cyan-950/10 transition-all duration-300 hover:-translate-y-1 md:ml-8 md:mt-8 group">
               <Settings
-                className="w-8 h-8 mb-4 text-[#ef2f6b] dark:text-rose-400 group-hover:scale-110 group-hover:rotate-45 transition-transform duration-300"
+                className="w-8 h-8 mb-4 text-cyan-700 dark:text-rose-400 group-hover:scale-110 group-hover:rotate-45 transition-transform duration-300"
                 aria-hidden="true"
               />
               <h3 className="text-lg md:text-xl font-bold font-display text-slate-900 dark:text-white mb-2 leading-snug">
@@ -73,7 +73,7 @@ export default function ProblemSection() {
                 admin overhead and improve day-to-day operations.
               </p>
               <a
-                className="text-[#ef2f6b] hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
+                className="text-cyan-700 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
                 href="#contact"
               >
                 Read More{" "}
@@ -101,7 +101,7 @@ export default function ProblemSection() {
           <div className="flex flex-col space-y-6 md:w-[32%] lg:w-[28%] z-10">
             <article className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-7 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-cyan-950/10 transition-all duration-300 hover:-translate-y-1 group">
               <Search
-                className="w-8 h-8 mb-4 text-[#ef2f6b] dark:text-rose-400 group-hover:scale-110 transition-transform duration-300"
+                className="w-8 h-8 mb-4 text-cyan-700 dark:text-rose-400 group-hover:scale-110 transition-transform duration-300"
                 aria-hidden="true"
               />
               <h3 className="text-lg md:text-xl font-bold font-display text-slate-900 dark:text-white mb-2 leading-snug">
@@ -114,7 +114,7 @@ export default function ProblemSection() {
                 patients search for healthcare services nearby.
               </p>
               <a
-                className="text-[#ef2f6b] hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
+                className="text-cyan-700 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
                 href="#contact"
               >
                 Read More{" "}
@@ -126,7 +126,7 @@ export default function ProblemSection() {
 
             <article className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-7 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-cyan-950/10 transition-all duration-300 hover:-translate-y-1 md:mr-8 md:mt-8 group">
               <Star
-                className="w-8 h-8 mb-4 text-[#ef2f6b] dark:text-rose-400 group-hover:scale-110 transition-transform duration-300"
+                className="w-8 h-8 mb-4 text-cyan-700 dark:text-rose-400 group-hover:scale-110 transition-transform duration-300"
                 aria-hidden="true"
               />
               <h3 className="text-lg md:text-xl font-bold font-display text-slate-900 dark:text-white mb-2 leading-snug">
@@ -139,7 +139,7 @@ export default function ProblemSection() {
                 branding, review strategies, and better digital experiences.
               </p>
               <a
-                className="text-[#ef2f6b] hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
+                className="text-cyan-700 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
                 href="#contact"
               >
                 Read More{" "}

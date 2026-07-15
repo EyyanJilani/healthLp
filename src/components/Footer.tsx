@@ -3,7 +3,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-slate-950 text-slate-400 py-16 md:py-20 border-t border-slate-900 transition-colors duration-300">
-      <div className="w-full max-w-6xl mx-auto px-5 grid grid-cols-1 lg:grid-cols-[1.5fr_2fr] gap-12 mb-16">
+      <div className="w-full max-w-7xl mx-auto px-5 grid grid-cols-1 lg:grid-cols-[1.5fr_2fr] gap-12 mb-16">
         <div className="space-y-4">
           <a className="inline-flex items-center gap-2.5 text-white font-display font-extrabold text-xl tracking-tight hover:opacity-90 transition-opacity" href="#top" aria-label="Digital Paradigm Health home">
             <span className="w-8 h-8 rounded-lg bg-cyan-500 text-slate-950 flex items-center justify-center shrink-0 shadow-md shadow-cyan-500/20" aria-hidden="true">
@@ -57,7 +57,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="w-full max-w-6xl mx-auto px-5 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between gap-4 text-xs text-slate-500">
+      <div className="w-full max-w-7xl mx-auto px-5 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between gap-4 text-xs text-slate-500">
         <p>© {currentYear} Digital Paradigm Health. All rights reserved.</p>
         <p className="max-w-md md:text-right leading-relaxed">
           Estimates and benchmarks are illustrative and not guarantees of outcome. All

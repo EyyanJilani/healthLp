@@ -14,7 +14,7 @@ export default function AhpraSection() {
       className="py-16 md:py-24 bg-gradient-to-br from-cyan-900 via-cyan-800 to-teal-800 text-white transition-colors duration-300"
       id="ahpra"
     >
-      <div className="w-full max-w-6xl mx-auto px-5 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+      <div className="w-full max-w-7xl mx-auto px-5 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div>
        
           <h2 className="text-3xl sm:text-4xl font-extrabold font-display tracking-tight text-white mb-4">

@@ -130,7 +130,7 @@ export default function StatBand() {
 
   return (
     <div className="relative z-10 border-t border-b border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-950 transition-colors duration-300" aria-label="Industry benchmarks">
-      <div className="w-full max-w-6xl mx-auto px-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+      <div className="w-full max-w-7xl mx-auto px-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 text-center">
         {stats.map((stat, i) => (
           <StatCountUp
             key={i}

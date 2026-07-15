@@ -3,7 +3,7 @@ import { ArrowRight, Activity, Stethoscope, Heart, Radio, Network } from "lucide
 
 export default function PracticeIntelligenceCta() {
   return (
-    <section className="py-12 md:py-16 bg-[#090d16] text-white relative overflow-hidden border-t border-b border-slate-900/80">
+    <section className="py-12 md:py-16 bg-gradient-to-br from-cyan-800 via-cyan-700 to-teal-800 text-white relative overflow-hidden border-t border-b border-slate-900/80">
       
       {/* Sleek Technical Wireframe / Isometric Grid Background */}
       <div className="absolute inset-0 opacity-[0.06] pointer-events-none" style={{
@@ -32,9 +32,9 @@ export default function PracticeIntelligenceCta() {
 
       {/* Decorative ambient neon glows */}
       <div className="absolute top-1/2 -left-1/4 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute top-1/2 -right-1/4 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-1/2 -right-1/4 w-[500px] h-[500px] bg-white/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="w-full max-w-6xl mx-auto px-5 relative z-10">
+      <div className="w-full max-w-7xl mx-auto px-5 relative z-10">
         <div className="flex justify-center text-center">
           
           {/* Left Column: Premium Copywriting directly inspired by high-end design */}
@@ -48,7 +48,7 @@ export default function PracticeIntelligenceCta() {
               </h2>
             </div>
 
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+            <p className="text-slate-100 text-sm sm:text-base leading-relaxed">
               We tie together everything your clinic needs to capture, remind, and reactivate patients. 
               See exactly how we spot blocked slots, capture missed calls with auto-SMS text-back, 
               and bypass complex, manual front-desk processes.
@@ -57,10 +57,10 @@ export default function PracticeIntelligenceCta() {
             <div className="flex flex-col sm:flex-row gap-4 pt-2 justify-center">
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center gap-2 font-sans font-bold text-sm py-4 px-8 rounded-xl bg-[#c3f53c] text-slate-950 hover:bg-[#b2e22f] shadow-lg shadow-[#c3f53c]/10 hover:shadow-[#c3f53c]/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 font-sans font-bold text-sm py-4 px-8 rounded-xl bg-white text-black hover:bg-white shadow-lg shadow-[#c3f53c]/10 hover:shadow-[#c3f53c]/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
               >
                 <span>Get Demo</span>
-                <ArrowRight className="w-4 h-4 text-slate-950" />
+                <ArrowRight className="w-4 h-4 text-wite" />
               </a>
               <a
                 href="#transform"
