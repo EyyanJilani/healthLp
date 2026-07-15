@@ -1,0 +1,6 @@
+{
+  "name": "Digital Paradigm Health",
+  "description": "A conversion-focused, highly interactive landing page for Australian clinics, featuring an interactive loss estimator, AHPRA compliance structure, responsive booking links, and a modern custom-styled design.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
