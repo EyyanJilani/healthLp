@@ -39,13 +39,13 @@ export default function ProblemSection() {
                 aria-hidden="true"
               />
               <h3 className="text-lg md:text-xl font-bold font-display text-slate-900 dark:text-white mb-2 leading-snug">
-                More Online Patient
+                The Ghost
                 <br />
-                Bookings
+                Website
               </h3>
               <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-                We build optimized healthcare websites and booking systems that
-                convert visitors into patient appointments.
+                Your site looks fine, yet patients still don't book. The booking
+                flow takes 3+ taps and they drop off.
               </p>
               <a
                 className="text-cyan-700 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
@@ -64,13 +64,13 @@ export default function ProblemSection() {
                 aria-hidden="true"
               />
               <h3 className="text-lg md:text-xl font-bold font-display text-slate-900 dark:text-white mb-2 leading-snug">
-                Better Internal
+                The Reputation
                 <br />
-                Efficiency
+                Gap
               </h3>
               <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-                Integrated systems and streamlined workflows help clinics reduce
-                admin overhead and improve day-to-day operations.
+                Your competitor has 180 reviews. You have 14. Clinics with 50+
+                reviews get up to 3x more calls.
               </p>
               <a
                 className="text-cyan-700 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
@@ -105,13 +105,13 @@ export default function ProblemSection() {
                 aria-hidden="true"
               />
               <h3 className="text-lg md:text-xl font-bold font-display text-slate-900 dark:text-white mb-2 leading-snug">
-                Higher Google
+                The Black-Hole
                 <br />
-                Visibility
+                Call System
               </h3>
               <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-                Our SEO and local search strategies help clinics appear when
-                patients search for healthcare services nearby.
+                Missed calls vanish. Nobody follows up. No callback, no SMS, so
+                the patient simply books elsewhere.
               </p>
               <a
                 className="text-cyan-700 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
@@ -130,13 +130,13 @@ export default function ProblemSection() {
                 aria-hidden="true"
               />
               <h3 className="text-lg md:text-xl font-bold font-display text-slate-900 dark:text-white mb-2 leading-snug">
-                Stronger Online
+                The Vendor
                 <br />
-                Reputation
+                Chaos
               </h3>
               <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-                We help healthcare providers build trust online through stronger
-                branding, review strategies, and better digital experiences.
+                Three vendors who never talk to each other. You become the
+                project manager, losing 5+ hours a week.
               </p>
               <a
                 className="text-cyan-700 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 mt-4 inline-flex items-center gap-1 font-semibold text-sm group/btn"
