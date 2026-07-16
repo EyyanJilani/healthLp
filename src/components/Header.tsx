@@ -1,26 +1,30 @@
 import { useState, useEffect } from "react";
+import LogoLight from "../../assets/images/LogoDark.webp";
+import LogoDark from "../../assets/images/LogoLight.webp";
 
 export default function Header() {
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    try {
-      const stored = localStorage.getItem("dph-theme");
-      if (stored === "light" || stored === "dark") return stored;
-    } catch {
-      // Ignored
-    }
-    if (typeof window !== "undefined") {
-      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      return systemDark ? "dark" : "light";
-    }
-    return "light";
-  });
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
+    root.setAttribute("data-theme", "light");
+    root.classList.remove("dark");
+    root.style.colorScheme = "light";
+    try {
+      localStorage.setItem("dph-theme", "light");
+    } catch {
+      // Ignored
+    }
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
     root.setAttribute("data-theme", theme);
+    root.classList.toggle("dark", theme === "dark");
+    root.style.colorScheme = theme;
     try {
       localStorage.setItem("dph-theme", theme);
     } catch {
@@ -51,21 +55,12 @@ export default function Header() {
       id="top"
     >
       <div className="w-full max-w-7xl mx-auto px-5 h-[70px] flex items-center justify-between">
-        <a className="flex items-center gap-2.5 text-slate-900 dark:text-slate-50 font-display group" href="#top" aria-label="Digital Paradigm Health home">
-          <span className="w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-br from-cyan-800 via-cyan-700 to-teal-700 text-white shadow-md shadow-cyan-500/20 group-hover:scale-105 transition-transform" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
-              <path
-                d="M16 6v20M6 16h20"
-                stroke="currentColor"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </span>
-          <span className="font-bold text-[17px] tracking-tight leading-none flex flex-col text-slate-950 dark:text-white">
-            Digital Paradigm
-            <span className="font-semibold text-[11px] tracking-widest uppercase text-cyan-700 dark:text-cyan-400 mt-0.5">Health</span>
-          </span>
+        <a className="flex items-center gap-2.5 font-display group" href="#top" aria-label="Digital Paradigm Health home">
+          <img
+            src={theme === "dark" ? LogoDark : LogoLight}
+            alt="Digital Paradigm Health"
+            className="h-9 w-auto object-contain"
+          />
         </a>
 
         <nav className="hidden md:flex items-center gap-1 ml-4" aria-label="Primary">
@@ -77,7 +72,7 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2 ml-auto">
-          <button
+          {/* <button
             className="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
             id="themeToggle"
             type="button"
@@ -112,7 +107,7 @@ export default function Header() {
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
               </svg>
             )}
-          </button>
+          </button> */}
 
           <a className="hidden sm:inline-flex items-center justify-center gap-1.5 font-sans font-semibold text-[14px] px-4 py-2 rounded-full border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer" href="tel:+61390000000">
             <svg

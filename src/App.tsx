@@ -57,10 +57,8 @@ export default function App() {
   }, []);
 
   return (
-    <>
-      <a className="skip-link" href="#main">
-        Skip to content
-      </a>
+    <div className="overflow-x-clip">
+     
 
       {/* Header */}
       <Header />
@@ -125,6 +123,6 @@ export default function App() {
 
       {/* Mobile Floating Sticky CTA */}
       <MobileStickyCta fee={fee} slots={slots} />
-    </>
+    </div>
   );
 }

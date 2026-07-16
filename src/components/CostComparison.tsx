@@ -28,7 +28,7 @@ export default function CostComparison() {
               <tr className="border-b border-slate-200 dark:border-slate-800">
                 <th
                   scope="col"
-                  className="p-4 sm:p-5 font-display font-extrabold text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-900/60 text-xs uppercase tracking-wider"
+                  className="p-4 sm:p-5 font-display font-extrabold text-slate-900 dark:text-white dark:bg-slate-900/60 text-xs uppercase tracking-wider"
                 >
                   Service / Role
                 </th>
@@ -54,7 +54,7 @@ export default function CostComparison() {
                 >
                   Website Dev &amp; Hosting (Yr 1)
                 </th>
-                <td className="p-4 sm:p-5 text-slate-600 dark:text-slate-400 font-mono">
+                <td className="p-4 sm:p-5 bg-slate-50 text-slate-600 dark:text-slate-400 font-mono">
                   $4,500 + $600/yr
                 </td>
                 <td className="p-4 sm:p-5 bg-emerald-500/[0.04] dark:bg-emerald-500/[0.02] text-emerald-700 dark:text-emerald-400 font-semibold border-l border-emerald-500/20">
@@ -68,7 +68,7 @@ export default function CostComparison() {
                 >
                   SEO &amp; Content (monthly)
                 </th>
-                <td className="p-4 sm:p-5 text-slate-600 dark:text-slate-400 font-mono">
+                <td className="p-4 sm:p-5 bg-slate-50 text-slate-600 dark:text-slate-400 font-mono">
                   $900 × 12 = $10,800
                 </td>
                 <td className="p-4 sm:p-5 bg-emerald-500/[0.04] dark:bg-emerald-500/[0.02] text-emerald-700 dark:text-emerald-400 font-semibold border-l border-emerald-500/20">
@@ -82,7 +82,7 @@ export default function CostComparison() {
                 >
                   Ads Management (monthly)
                 </th>
-                <td className="p-4 sm:p-5 text-slate-600 dark:text-slate-400 font-mono">
+                <td className="p-4 sm:p-5 bg-slate-50 text-slate-600 dark:text-slate-400 font-mono">
                   $1,200 × 12 = $14,400
                 </td>
                 <td className="p-4 sm:p-5 bg-emerald-500/[0.04] dark:bg-emerald-500/[0.02] text-emerald-700 dark:text-emerald-400 font-semibold border-l border-emerald-500/20">
@@ -96,7 +96,7 @@ export default function CostComparison() {
                 >
                   Project Management (your time)
                 </th>
-                <td className="p-4 sm:p-5 text-slate-600 dark:text-slate-400 font-mono">
+                <td className="p-4 sm:p-5 bg-slate-50 text-slate-600 dark:text-slate-400 font-mono">
                   $1,500 × 12 = $18,000
                 </td>
                 <td className="p-4 sm:p-5 bg-emerald-500/[0.04] dark:bg-emerald-500/[0.02] text-emerald-700 dark:text-emerald-400 font-semibold border-l border-emerald-500/20">
@@ -110,7 +110,7 @@ export default function CostComparison() {
                 >
                   Total Year 1 Cost
                 </th>
-                <td className="p-4 sm:p-5 text-slate-400 dark:text-slate-500 font-mono line-through border-t-2 border-slate-200 dark:border-slate-800">
+                <td className="p-4 sm:p-5 bg-slate-50 text-slate-400 dark:text-slate-500 font-mono line-through border-t-2 border-slate-200 dark:border-slate-800 text-2xl">
                   $48,300
                 </td>
                 <td className="p-4 sm:p-5 bg-emerald-500/[0.04] dark:bg-emerald-500/[0.02] text-emerald-700 dark:text-emerald-400 font-bold border-l border-emerald-500/20 border-t-2 border-slate-200 dark:border-slate-800">

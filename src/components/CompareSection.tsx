@@ -12,7 +12,7 @@ export default function CompareSection() {
   ];
 
   const goodList = [
-    <>Booking is <strong className="text-slate-900 dark:text-white font-bold">one tap</strong> on mobile</>,
+    <>Booking is <strong className="text-white font-bold">one tap</strong> on mobile</>,
     <>Missed call triggers an instant SMS, and the slot is recovered</>,
     <>Every ad dollar tracked to a real appointment</>,
     <>Automated reminders cut no-shows by up to 25%</>,
@@ -65,7 +65,7 @@ export default function CompareSection() {
               </div>
 
               {/* WITH SYSTEM CARD */}
-              <div className="bg-white dark:bg-slate-950 border-2 border-emerald-500/40 dark:border-emerald-500/20 rounded-2xl p-6 sm:p-8 shadow-md bg-gradient-to-br from-emerald-500/[0.01] to-transparent">
+              <div className="bg-gradient-to-br from-cyan-800 via-cyan-700 to-teal-800 border border-transparent dark:bg-slate-950 border-2 rounded-2xl p-6 sm:p-8 shadow-md">
                 <div className="mb-4">
                   <span className="font-bold text-[11px] uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/20">
                     With your system running
@@ -73,7 +73,7 @@ export default function CompareSection() {
                 </div>
                 <ul className="space-y-3.5">
                   {goodList.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-3 mb-0 py-0.5 text-slate-700 dark:text-slate-300 text-sm sm:text-base">
+                    <li key={idx} className="flex items-start gap-3 mb-0 py-0.5 text-slate-300 text-sm sm:text-base">
                       <div className="w-5 h-5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center shrink-0 mt-0.5">
                         <Check className="text-emerald-600 dark:text-emerald-400 w-3.5 h-3.5" aria-hidden="true" />
                       </div>

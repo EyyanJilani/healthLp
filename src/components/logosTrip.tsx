@@ -38,6 +38,11 @@ export default function LogosTrip() {
           arrows: false,
           pagination: false,
           drag: false,
+          breakpoints: {
+            640: {
+              perPage: 3,
+            },
+          },
           autoScroll: {
             speed: 0.8, // Adjust for smoothness
             pauseOnHover: true,

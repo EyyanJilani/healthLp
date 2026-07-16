@@ -1,5 +1,11 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, MessageSquare, Quote } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, A11y } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import type { Swiper as SwiperType } from "swiper";
 import { TestimonialItem } from "../types";
 
 export default function Testimonials() {
@@ -48,159 +54,20 @@ export default function Testimonials() {
     },
   ];
 
-  // Triplicate for seamless infinite loop
-  const duplicatedTestimonials = [...testimonials, ...testimonials, ...testimonials];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const swiperRef = useRef<SwiperType | null>(null);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [activeDot, setActiveDot] = useState(0);
-
-  // ── Slider State Refs (avoid re-renders in animation loop) ──────────────────
-  const isPausedRef = useRef(false);       // paused by hover / drag
-  const isDraggingRef = useRef(false);
-  const dragStartXRef = useRef(0);
-  const dragStartScrollRef = useRef(0);
-  const velocityRef = useRef(0);           // momentum after drag release
-  const lastDragXRef = useRef(0);
-  const animFrameRef = useRef<number>(0);
-  const lastTimeRef = useRef<number>(0);
-  const SPEED = 0.035; // px per ms (auto-scroll)
-
-  // ── Dot sync ────────────────────────────────────────────────────────────────
-  const syncDot = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const singleSetWidth = el.scrollWidth / 3;
-    const rawOffset = el.scrollLeft % singleSetWidth;
-    // Approximate card width from the first child
-    const cardW = (el.firstElementChild as HTMLElement)?.offsetWidth ?? el.clientWidth;
-    const gap = 24;
-    const idx = Math.round(rawOffset / (cardW + gap));
-    setActiveDot(Math.min(testimonials.length - 1, Math.max(0, idx)));
-  }, [testimonials.length]);
-
-  // ── Infinite wrap helper ─────────────────────────────────────────────────────
-  const wrapScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const singleSetWidth = el.scrollWidth / 3;
-    if (el.scrollLeft >= singleSetWidth * 2) el.scrollLeft -= singleSetWidth;
-    if (el.scrollLeft < singleSetWidth * 0) el.scrollLeft += singleSetWidth;
-  }, []);
-
-  // ── Main animation loop ──────────────────────────────────────────────────────
-  useEffect(() => {
-    const animate = (time: number) => {
-      if (!lastTimeRef.current) lastTimeRef.current = time;
-      const delta = time - lastTimeRef.current;
-      lastTimeRef.current = time;
-
-      const el = scrollRef.current;
-      if (el) {
-        if (!isPausedRef.current) {
-          // Auto-scroll
-          el.scrollLeft += SPEED * delta;
-          wrapScroll();
-        } else if (Math.abs(velocityRef.current) > 0.1) {
-          // Momentum coast after drag
-          el.scrollLeft += velocityRef.current;
-          velocityRef.current *= 0.92; // friction
-          wrapScroll();
-        }
-        syncDot();
-      }
-
-      animFrameRef.current = requestAnimationFrame(animate);
-    };
-
-    animFrameRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animFrameRef.current);
-  }, [wrapScroll, syncDot]);
-
-  // ── Pause / resume helpers ───────────────────────────────────────────────────
-  const pause = () => {
-    isPausedRef.current = true;
-    lastTimeRef.current = 0; // reset so delta doesn't spike on resume
-  };
-  const resume = () => {
-    isPausedRef.current = false;
+  const handlePrev = () => {
+    swiperRef.current?.slidePrev();
   };
 
-  // ── Mouse drag ───────────────────────────────────────────────────────────────
-  const onMouseDown = (e: React.MouseEvent) => {
-    isDraggingRef.current = true;
-    dragStartXRef.current = e.clientX;
-    lastDragXRef.current = e.clientX;
-    dragStartScrollRef.current = scrollRef.current?.scrollLeft ?? 0;
-    velocityRef.current = 0;
-    pause();
+  const handleNext = () => {
+    swiperRef.current?.slideNext();
   };
 
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDraggingRef.current || !scrollRef.current) return;
-    const dx = e.clientX - dragStartXRef.current;
-    scrollRef.current.scrollLeft = dragStartScrollRef.current - dx;
-    velocityRef.current = lastDragXRef.current - e.clientX; // direction × magnitude
-    lastDragXRef.current = e.clientX;
-    wrapScroll();
-  };
-
-  const onMouseUp = () => {
-    if (!isDraggingRef.current) return;
-    isDraggingRef.current = false;
-    // Let momentum coast for a bit, then resume auto-scroll after 1.2s
-    setTimeout(resume, 1200);
-  };
-
-  const onMouseLeave = () => {
-    if (isDraggingRef.current) onMouseUp();
-    else resume();
-  };
-
-  // ── Touch drag ───────────────────────────────────────────────────────────────
-  const onTouchStart = (e: React.TouchEvent) => {
-    dragStartXRef.current = e.touches[0].clientX;
-    lastDragXRef.current = e.touches[0].clientX;
-    dragStartScrollRef.current = scrollRef.current?.scrollLeft ?? 0;
-    velocityRef.current = 0;
-    pause();
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!scrollRef.current) return;
-    const dx = e.touches[0].clientX - dragStartXRef.current;
-    scrollRef.current.scrollLeft = dragStartScrollRef.current - dx;
-    velocityRef.current = lastDragXRef.current - e.touches[0].clientX;
-    lastDragXRef.current = e.touches[0].clientX;
-    wrapScroll();
-  };
-
-  const onTouchEnd = () => {
-    setTimeout(resume, 1200);
-  };
-
-  // ── Arrow buttons ────────────────────────────────────────────────────────────
-  const scroll = (direction: "left" | "right") => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardW = (el.firstElementChild as HTMLElement)?.offsetWidth ?? el.clientWidth;
-    const amount = (cardW + 24) * (direction === "left" ? -1 : 1);
-    el.scrollBy({ left: amount, behavior: "smooth" });
-    // Brief pause so user sees the scroll
-    pause();
-    setTimeout(resume, 1400);
-  };
-
-  // ── Dot click ────────────────────────────────────────────────────────────────
-  const scrollToDot = (index: number) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardW = (el.firstElementChild as HTMLElement)?.offsetWidth ?? el.clientWidth;
-    // Jump to the middle set so there's room to scroll both ways
-    const singleSetWidth = el.scrollWidth / 3;
-    el.scrollTo({ left: singleSetWidth + index * (cardW + 24), behavior: "smooth" });
-    setActiveDot(index);
-    pause();
-    setTimeout(resume, 1400);
+  const handleDotClick = (index: number) => {
+    swiperRef.current?.slideToLoop(index);
+    setActiveIndex(index);
   };
 
   return (
@@ -224,14 +91,14 @@ export default function Testimonials() {
           {/* Navigation Controls */}
           <div className="flex items-center gap-3 self-start md:self-end">
             <button
-              onClick={() => scroll("left")}
+              onClick={handlePrev}
               className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-sm active:scale-95"
               aria-label="Previous slide"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
-              onClick={() => scroll("right")}
+              onClick={handleNext}
               className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-sm active:scale-95"
               aria-label="Next slide"
             >
@@ -246,48 +113,50 @@ export default function Testimonials() {
           <div className="absolute top-0 bottom-0 -left-6 w-12 bg-gradient-to-r from-white dark:from-slate-950 via-transparent to-transparent z-10 pointer-events-none hidden md:block"></div>
           <div className="absolute top-0 bottom-0 -right-6 w-12 bg-gradient-to-l from-white dark:from-slate-950 via-transparent to-transparent z-10 pointer-events-none hidden md:block"></div>
 
-          <div
-            ref={scrollRef}
-            onMouseDown={onMouseDown}
-            onMouseMove={onMouseMove}
-            onMouseUp={onMouseUp}
-            onMouseLeave={onMouseLeave}
-            onMouseEnter={pause}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 select-none"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          <Swiper
+            modules={[Autoplay, A11y]}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+            spaceBetween={24}
+            slidesPerView={1}
+            loop={true}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+            className=""
           >
-            {duplicatedTestimonials.map((t, idx) => (
-              <figure
-                key={idx}
-                className="min-w-[100%] sm:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] snap-start bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm hover:shadow-lg transition-all duration-350 hover:-translate-y-1 flex flex-col gap-5 justify-between cursor-grab active:cursor-grabbing"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="text-amber-500 tracking-wider text-base" aria-label="5 out of 5 stars">
-                      ★★★★★
+            {testimonials.map((t, idx) => (
+              <SwiperSlide key={`${t.name}-${idx}`} className="h-auto">
+                <figure className="h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm hover:shadow-lg transition-all duration-350 hover:-translate-y-1 flex flex-col gap-5 justify-between cursor-grab active:cursor-grabbing">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="text-amber-500 tracking-wider text-base" aria-label="5 out of 5 stars">
+                        ★★★★★
+                      </div>
+                      <Quote className="w-6 h-6 text-slate-200 dark:text-slate-800" />
                     </div>
-                    <Quote className="w-6 h-6 text-slate-200 dark:text-slate-800" />
+                    <blockquote className="font-display font-medium text-[15px] sm:text-[16px] leading-relaxed text-slate-805 dark:text-slate-100 italic">
+                      "{t.quote}"
+                    </blockquote>
                   </div>
-                  <blockquote className="font-display font-medium text-[15px] sm:text-[16px] leading-relaxed text-slate-805 dark:text-slate-100 italic">
-                    "{t.quote}"
-                  </blockquote>
-                </div>
 
-                <figcaption className="flex items-center gap-3.5 pt-4 border-t border-slate-100 dark:border-slate-800/60 mt-auto">
-                  <span className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-cyan-800 via-cyan-700 to-teal-700 text-white font-bold text-sm shrink-0 shadow-md shadow-cyan-500/10" aria-hidden="true">
-                    {t.initials}
-                  </span>
-                  <span className="flex flex-col">
-                    <strong className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{t.name}</strong>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-normal">{t.role}</span>
-                  </span>
-                </figcaption>
-              </figure>
+                  <figcaption className="flex items-center gap-3.5 pt-4 border-t border-slate-100 dark:border-slate-800/60 mt-auto">
+                    <span className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-cyan-800 via-cyan-700 to-teal-700 text-white font-bold text-sm shrink-0 shadow-md shadow-cyan-500/10" aria-hidden="true">
+                      {t.initials}
+                    </span>
+                    <span className="flex flex-col">
+                      <strong className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{t.name}</strong>
+                      <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-normal">{t.role}</span>
+                    </span>
+                  </figcaption>
+                </figure>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         </div>
 
         {/* Dot indicators */}
@@ -295,11 +164,11 @@ export default function Testimonials() {
           {testimonials.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => scrollToDot(idx)}
+              onClick={() => handleDotClick(idx)}
               className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                activeDot === idx
+                activeIndex === idx
                   ? "w-8 bg-cyan-600 dark:bg-cyan-500"
-                  : "w-2.5 bg-slate-300 dark:bg-slate-750 hover:bg-slate-400 dark:hover:bg-slate-600"
+                  : "w-2.5 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />

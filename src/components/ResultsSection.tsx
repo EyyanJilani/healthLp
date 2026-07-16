@@ -1,9 +1,15 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Sparkles } from "lucide-react";
-import  resultImage1  from "../../assets/images/result1.webp";
-import  resultImage2  from "../../assets/images/result2.webp";
-import  resultImage3  from "../../assets/images/result3.webp";
-import  resultImage4  from "../../assets/images/result4.webp";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, A11y } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import type { Swiper as SwiperType } from "swiper";
+import resultImage1 from "../../assets/images/result1.webp";
+import resultImage2 from "../../assets/images/result2.webp";
+import resultImage3 from "../../assets/images/result3.webp";
+import resultImage4 from "../../assets/images/result4.webp";
 
 interface ResultWithImage {
   title: string;
@@ -74,116 +80,20 @@ export default function ResultsSection() {
     },
   ];
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [activeDot, setActiveDot] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const swiperRef = useRef<SwiperType | null>(null);
 
-  // ── Slider refs (no re-renders in animation loop) ────────────────────────────
-  const isDraggingRef = useRef(false);
-  const dragStartXRef = useRef(0);
-  const dragStartScrollRef = useRef(0);
-  const lastDragXRef = useRef(0);
-  const velocityRef = useRef(0);
-  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // ── Dot sync ─────────────────────────────────────────────────────────────────
-  const syncDot = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardW = (el.firstElementChild as HTMLElement)?.offsetWidth ?? el.clientWidth;
-    const idx = Math.round(el.scrollLeft / (cardW + 24));
-    setActiveDot(Math.min(results.length - 1, Math.max(0, idx)));
-  }, [results.length]);
-
-  // Keep dot in sync on native scroll (arrow keys, trackpad, etc.)
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.addEventListener("scroll", syncDot, { passive: true });
-    return () => el.removeEventListener("scroll", syncDot);
-  }, [syncDot]);
-
-  // ── Momentum coast after drag ─────────────────────────────────────────────────
-  const coastRef = useRef<number>(0);
-  const startCoast = useCallback(() => {
-    cancelAnimationFrame(coastRef.current);
-    const step = () => {
-      const el = scrollRef.current;
-      if (!el || Math.abs(velocityRef.current) < 0.3) return;
-      el.scrollLeft += velocityRef.current;
-      velocityRef.current *= 0.88; // friction
-      syncDot();
-      coastRef.current = requestAnimationFrame(step);
-    };
-    coastRef.current = requestAnimationFrame(step);
-  }, [syncDot]);
-
-  // ── Mouse drag ────────────────────────────────────────────────────────────────
-  const onMouseDown = (e: React.MouseEvent) => {
-    isDraggingRef.current = true;
-    dragStartXRef.current = e.clientX;
-    lastDragXRef.current = e.clientX;
-    dragStartScrollRef.current = scrollRef.current?.scrollLeft ?? 0;
-    velocityRef.current = 0;
-    cancelAnimationFrame(coastRef.current);
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+  const handlePrev = () => {
+    swiperRef.current?.slidePrev();
   };
 
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDraggingRef.current || !scrollRef.current) return;
-    const dx = e.clientX - dragStartXRef.current;
-    scrollRef.current.scrollLeft = dragStartScrollRef.current - dx;
-    velocityRef.current = lastDragXRef.current - e.clientX;
-    lastDragXRef.current = e.clientX;
-    syncDot();
+  const handleNext = () => {
+    swiperRef.current?.slideNext();
   };
 
-  const onMouseUp = () => {
-    if (!isDraggingRef.current) return;
-    isDraggingRef.current = false;
-    startCoast();
-  };
-
-  const onMouseLeave = () => {
-    if (isDraggingRef.current) onMouseUp();
-  };
-
-  // ── Touch drag ────────────────────────────────────────────────────────────────
-  const onTouchStart = (e: React.TouchEvent) => {
-    dragStartXRef.current = e.touches[0].clientX;
-    lastDragXRef.current = e.touches[0].clientX;
-    dragStartScrollRef.current = scrollRef.current?.scrollLeft ?? 0;
-    velocityRef.current = 0;
-    cancelAnimationFrame(coastRef.current);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!scrollRef.current) return;
-    const dx = e.touches[0].clientX - dragStartXRef.current;
-    scrollRef.current.scrollLeft = dragStartScrollRef.current - dx;
-    velocityRef.current = lastDragXRef.current - e.touches[0].clientX;
-    lastDragXRef.current = e.touches[0].clientX;
-    syncDot();
-  };
-
-  const onTouchEnd = () => {
-    startCoast();
-  };
-
-  // ── Arrow buttons ─────────────────────────────────────────────────────────────
-  const scroll = (direction: "left" | "right") => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardW = (el.firstElementChild as HTMLElement)?.offsetWidth ?? el.clientWidth;
-    el.scrollBy({ left: (cardW + 24) * (direction === "left" ? -1 : 1), behavior: "smooth" });
-  };
-
-  // ── Dot click ─────────────────────────────────────────────────────────────────
-  const scrollToDot = (index: number) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardW = (el.firstElementChild as HTMLElement)?.offsetWidth ?? el.clientWidth;
-    el.scrollTo({ left: index * (cardW + 24), behavior: "smooth" });
-    setActiveDot(index);
+  const handleDotClick = (index: number) => {
+    swiperRef.current?.slideToLoop(index);
+    setActiveIndex(index);
   };
 
   return (
@@ -209,14 +119,14 @@ export default function ResultsSection() {
           {/* Navigation Controls */}
           <div className="flex items-center gap-3 self-start md:self-end">
             <button
-              onClick={() => scroll("left")}
+              onClick={handlePrev}
               className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-sm active:scale-95"
               aria-label="Previous slide"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
-              onClick={() => scroll("right")}
+              onClick={handleNext}
               className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-sm active:scale-95"
               aria-label="Next slide"
             >
@@ -226,92 +136,95 @@ export default function ResultsSection() {
         </div>
 
         {/* Carousel Scroll Container */}
-        <div
-          ref={scrollRef}
-          onMouseDown={onMouseDown}
-          onMouseMove={onMouseMove}
-          onMouseUp={onMouseUp}
-          onMouseLeave={onMouseLeave}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 select-none"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        <Swiper
+          modules={[Autoplay, A11y]}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+          spaceBetween={24}
+          slidesPerView={1}
+          loop={true}
+          autoplay={{ delay: 5000, disableOnInteraction: false }}
+          breakpoints={{
+            640: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+          className=""
         >
           {results.map((item, idx) => (
-            <article
-              key={idx}
-              className="min-w-[100%] sm:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] snap-start bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-350 hover:-translate-y-1 group flex flex-col h-full cursor-grab active:cursor-grabbing"
-            >
-              {/* Image Header with Elegant Overlay */}
-              <div className="relative h-48 w-full overflow-hidden shrink-0">
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent z-10"></div>
-                <img
-                  src={item.image}
-                  alt={`${item.title} facility and operations`}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
-                  loading="lazy"
-                  draggable={false}
-                />
-                <span className="absolute top-4 right-4 z-20 text-[10px] font-bold uppercase tracking-wider text-cyan-800 dark:text-cyan-300 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-sm px-3 py-1 rounded-full border border-slate-100 dark:border-slate-800">
-                  {item.tag}
-                </span>
-              </div>
+            <SwiperSlide key={`${item.title}-${idx}`} className="h-auto">
+              <article className="h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-350 hover:-translate-y-1 group flex flex-col cursor-grab active:cursor-grabbing">
+                {/* Image Header with Elegant Overlay */}
+                <div className="relative h-48 w-full overflow-hidden shrink-0">
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent z-10"></div>
+                  <img
+                    src={item.image}
+                    alt={`${item.title} facility and operations`}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                    draggable={false}
+                  />
+                  <span className="absolute top-4 right-4 z-20 text-[10px] font-bold uppercase tracking-wider text-cyan-800 dark:text-cyan-300 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-sm px-3 py-1 rounded-full border border-slate-100 dark:border-slate-800">
+                    {item.tag}
+                  </span>
+                </div>
 
-              {/* Card Body content */}
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500 mb-2 font-semibold">
-                    <MapPin className="w-3.5 h-3.5 text-cyan-500" />
-                    <span>{item.location}</span>
+                {/* Card Body content */}
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500 mb-2 font-semibold">
+                      <MapPin className="w-3.5 h-3.5 text-cyan-500" />
+                      <span>{item.location}</span>
+                    </div>
+
+                    <h3 className="font-bold text-xl font-display text-slate-900 dark:text-white leading-tight mb-3">
+                      {item.title}
+                    </h3>
+
+                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                      {item.description}
+                    </p>
                   </div>
 
-                  <h3 className="font-bold text-xl font-display text-slate-900 dark:text-white leading-tight mb-3">
-                    {item.title}
-                  </h3>
-
-                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
-                    {item.description}
-                  </p>
+                  {/* Metrics Footer Section inside Card */}
+                  <div className="grid grid-cols-3 gap-3 pt-5 border-t border-slate-100 dark:border-slate-800/80">
+                    {item.metrics.map((m, mIdx) => (
+                      <div key={mIdx} className="flex flex-col gap-0.5">
+                        <strong
+                          className={`font-display text-lg font-black tabular-nums tracking-tight ${
+                            m.trend === "up"
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : m.trend === "down"
+                              ? "text-rose-600 dark:text-rose-400"
+                              : "text-slate-900 dark:text-white"
+                          }`}
+                        >
+                          {m.value}
+                        </strong>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">
+                          {m.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-
-                {/* Metrics Footer Section inside Card */}
-                <div className="grid grid-cols-3 gap-3 pt-5 border-t border-slate-100 dark:border-slate-800/80">
-                  {item.metrics.map((m, mIdx) => (
-                    <div key={mIdx} className="flex flex-col gap-0.5">
-                      <strong
-                        className={`font-display text-lg font-black tabular-nums tracking-tight ${
-                          m.trend === "up"
-                            ? "text-emerald-600 dark:text-emerald-400"
-                            : m.trend === "down"
-                            ? "text-rose-600 dark:text-rose-400"
-                            : "text-slate-900 dark:text-white"
-                        }`}
-                      >
-                        {m.value}
-                      </strong>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">
-                        {m.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </article>
+              </article>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
 
         {/* Carousel Bottom Indicator Dots */}
         <div className="flex justify-center items-center gap-2.5 mt-8">
           {results.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => scrollToDot(idx)}
+              onClick={() => handleDotClick(idx)}
               className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                activeDot === idx
+                activeIndex === idx
                   ? "w-8 bg-cyan-600 dark:bg-cyan-500"
-                  : "w-2.5 bg-slate-300 dark:bg-slate-700 hover:bg-slate-450 dark:hover:bg-slate-600"
+                  : "w-2.5 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />

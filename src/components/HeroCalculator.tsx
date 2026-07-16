@@ -1,30 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import trust1 from "../../assets/images/trust1.png";
 import trust2 from "../../assets/images/trust2.png";
 import trust3 from "../../assets/images/trust3.png";
 import trust4 from "../../assets/images/trust4.png";
-import {
-  User,
-  Mail,
-  Phone,
-  MessageSquare,
-  ArrowRight,
-  CheckCircle2,
-  ShieldCheck,
-  Check,
-} from "lucide-react";
+import { User, Mail, Phone, MessageSquare, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export default function HeroCalculator() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-    competitorAnalysis: true,
-  });
-
-  const [errors, setErrors] = useState({
-    name: "",
+    fullName: "",
     email: "",
     phone: "",
     message: "",
@@ -32,83 +15,75 @@ export default function HeroCalculator() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [submittedName, setSubmittedName] = useState("");
 
-  const validateField = (name: string, value: string) => {
-    if (name === "name") {
-      return value.trim().length >= 2 ? "" : "Please enter your full name.";
-    }
-    if (name === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(value.trim())
-        ? ""
-        : "Please enter a valid email address.";
-    }
-    if (name === "phone") {
-      const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
-      if (!value.trim()) return "";
-      return phoneRegex.test(value.trim()) && value.trim().length >= 8
-        ? ""
-        : "Please enter a valid phone number.";
-    }
-    if (name === "message") {
-      return value.trim().length >= 5
-        ? ""
-        : "Please write a brief message or describe your clinic.";
-    }
-    return "";
-  };
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
-    if (errors[name as keyof typeof errors]) {
-      const errMsg = validateField(name, value);
-      setErrors((prev) => ({ ...prev, [name]: errMsg }));
-    }
+    if (errorMessage) setErrorMessage(null);
   };
 
-  const handleBlur = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    const errMsg = validateField(name, value);
-    setErrors((prev) => ({ ...prev, [name]: errMsg }));
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, competitorAnalysis: e.target.checked }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMessage(null);
 
-    const nameErr = validateField("name", formData.name);
-    const emailErr = validateField("email", formData.email);
-    const phoneErr = validateField("phone", formData.phone);
-    const msgErr = validateField("message", formData.message);
-
-    if (nameErr || emailErr || phoneErr || msgErr) {
-      setErrors({
-        name: nameErr,
-        email: emailErr,
-        phone: phoneErr,
-        message: msgErr,
-      });
-      return;
+    if (!formData.fullName.trim()) {
+      return setErrorMessage("Please enter your full name.");
+    }
+    if (!formData.email.trim() || !validateEmail(formData.email)) {
+      return setErrorMessage("Please enter a valid email address.");
+    }
+    if (!formData.phone.trim()) {
+      return setErrorMessage("Please enter your phone number.");
+    }
+    if (!formData.message.trim()) {
+      return setErrorMessage("Please write a brief message or describe your clinic.");
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
+
+    const payload = {
+      fullName: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      message: formData.message,
+      comments: formData.message,
+    };
+
+    try {
+      const res = await fetch("https://server.optimal-itsolutions.com/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const name = formData.fullName.trim().split(" ")[0] || "there";
+        setSubmittedName(name);
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          message: "",
+        });
+        setIsSuccess(true);
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        setErrorMessage(errorData?.error || "Failed to send your request. Please try again.");
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      setErrorMessage("Unable to reach the server. Please try again shortly.");
+    } finally {
       setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 1200);
+    }
   };
 
   return (
-    <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
+    <section className="relative pt-16 pb-16 md:pt-24 md:pb-24 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
       <div
         className="absolute inset-0 bg-radial-gradient from-cyan-50/40 via-transparent to-transparent dark:from-cyan-950/10 pointer-events-none"
         aria-hidden="true"
@@ -165,42 +140,7 @@ export default function HeroCalculator() {
             </a>
           </div>
 
-          {/* <ul className="flex flex-wrap gap-x-6 gap-y-3 pt-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
-            <li className="flex items-center gap-1.5">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-emerald-500 shrink-0"
-              >
-                <path d="M20 6 9 17l-5-5" />
-              </svg>
-              <span>Trusted by <strong className="text-slate-900 dark:text-white font-bold">22+</strong> Australian clinics</span>
-            </li>
-            <li className="flex items-center gap-1.5">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-emerald-500 shrink-0"
-              >
-                <path d="M20 6 9 17l-5-5" />
-              </svg>
-              <span>Melbourne HQ · Nationwide</span>
-            </li>
-            <li className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-100 dark:border-emerald-900/20 flex items-center">
-              <ShieldCheck className="w-4 h-4 mr-1 text-emerald-600 shrink-0" />
-              <span>AHPRA-ready</span>
-            </li>
-          </ul> */}
-
-          <div className="gap-2 md:w-28 w-20 flex">
+          <div className="gap-2 md:w-28 w-16 flex">
             <img className="rounded-md" src={trust1} alt="" />
             <img className="rounded-md" src={trust2} alt="" />
             <img className="rounded-md" src={trust3} alt="" />
@@ -208,7 +148,6 @@ export default function HeroCalculator() {
           </div>
         </div>
 
-        {/* Lead/Contact Form Card */}
         <aside
           className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden backdrop-blur-md"
           aria-labelledby="form-title"
@@ -238,9 +177,8 @@ export default function HeroCalculator() {
                 </p>
 
                 <div className="space-y-4">
-                  {/* Full Name field */}
                   <div>
-                    <label htmlFor="hero-name" className="sr-only">
+                    <label htmlFor="hero-fullName" className="sr-only">
                       Full Name
                     </label>
                     <div className="relative">
@@ -249,29 +187,18 @@ export default function HeroCalculator() {
                       </div>
                       <input
                         type="text"
-                        id="hero-name"
-                        name="name"
+                        id="hero-fullName"
+                        name="fullName"
                         placeholder="Full Name *"
                         autoComplete="name"
-                        value={formData.name}
+                        value={formData.fullName}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={`w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900/50 border ${
-                          errors.name
-                            ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                            : "border-slate-200 dark:border-slate-800 focus:ring-cyan-500/20 focus:border-cyan-500"
-                        } rounded-xl focus:outline-none focus:ring-2 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400`}
+                        className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 focus:ring-cyan-500/20 focus:border-cyan-500 rounded-xl focus:outline-none focus:ring-2 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400"
                         required
                       />
                     </div>
-                    {errors.name && (
-                      <span className="mt-1 text-xs text-red-500 block">
-                        {errors.name}
-                      </span>
-                    )}
                   </div>
 
-                  {/* Email Address field */}
                   <div>
                     <label htmlFor="hero-email" className="sr-only">
                       Email Address
@@ -289,23 +216,12 @@ export default function HeroCalculator() {
                         inputMode="email"
                         value={formData.email}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={`w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900/50 border ${
-                          errors.email
-                            ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                            : "border-slate-200 dark:border-slate-800 focus:ring-cyan-500/20 focus:border-cyan-500"
-                        } rounded-xl focus:outline-none focus:ring-2 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400`}
+                        className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 focus:ring-cyan-500/20 focus:border-cyan-500 rounded-xl focus:outline-none focus:ring-2 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400"
                         required
                       />
                     </div>
-                    {errors.email && (
-                      <span className="mt-1 text-xs text-red-500 block">
-                        {errors.email}
-                      </span>
-                    )}
                   </div>
 
-                  {/* Phone Number field */}
                   <div>
                     <label htmlFor="hero-phone" className="sr-only">
                       Phone Number
@@ -318,27 +234,17 @@ export default function HeroCalculator() {
                         type="tel"
                         id="hero-phone"
                         name="phone"
-                        placeholder="Phone Number (Optional)"
+                        placeholder="Phone Number *"
                         autoComplete="tel"
                         inputMode="tel"
                         value={formData.phone}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={`w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900/50 border ${
-                          errors.phone
-                            ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                            : "border-slate-200 dark:border-slate-800 focus:ring-cyan-500/20 focus:border-cyan-500"
-                        } rounded-xl focus:outline-none focus:ring-2 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400`}
+                        className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 focus:ring-cyan-500/20 focus:border-cyan-500 rounded-xl focus:outline-none focus:ring-2 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400"
+                        required
                       />
                     </div>
-                    {errors.phone && (
-                      <span className="mt-1 text-xs text-red-500 block">
-                        {errors.phone}
-                      </span>
-                    )}
                   </div>
 
-                  {/* Message field */}
                   <div>
                     <label htmlFor="hero-message" className="sr-only">
                       Message / Clinic Details
@@ -354,43 +260,18 @@ export default function HeroCalculator() {
                         rows={3}
                         value={formData.message}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={`w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900/50 border ${
-                          errors.message
-                            ? "border-red-500 focus:ring-red-500/20 focus:border-red-500"
-                            : "border-slate-200 dark:border-slate-800 focus:ring-cyan-500/20 focus:border-cyan-500"
-                        } rounded-xl focus:outline-none focus:ring-2 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400 resize-none`}
+                        className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 focus:ring-cyan-500/20 focus:border-cyan-500 rounded-xl focus:outline-none focus:ring-2 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400 resize-none"
                         required
                       />
                     </div>
-                    {errors.message && (
-                      <span className="mt-1 text-xs text-red-500 block">
-                        {errors.message}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Interactive toggle option */}
-                  <div className="flex items-start gap-3 mt-2 px-1">
-                    <input
-                      type="checkbox"
-                      id="competitor-analysis"
-                      checked={formData.competitorAnalysis}
-                      onChange={handleCheckboxChange}
-                      className="mt-1 w-4 h-4 text-cyan-600 border-slate-300 rounded focus:ring-cyan-500 focus:ring-2 cursor-pointer"
-                    />
-                    <label
-                      htmlFor="competitor-analysis"
-                      className="text-xs text-slate-500 dark:text-slate-400 select-none cursor-pointer leading-tight"
-                    >
-                      Yes, include a free local competitor booking analysis
-                      (Recommended)
-                    </label>
                   </div>
                 </div>
               </div>
 
               <div className="mt-6">
+                {errorMessage && (
+                  <p className="mb-3 text-sm text-red-500">{errorMessage}</p>
+                )}
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -422,7 +303,7 @@ export default function HeroCalculator() {
                 <CheckCircle2 className="w-10 h-10" />
               </div>
               <h3 className="text-2xl font-bold font-display text-slate-800 dark:text-slate-100 mb-2">
-                Thank you, {formData.name.split(" ")[0]}!
+                Thank you, {submittedName}!
               </h3>
               <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[280px] mb-6">
                 We have received your growth audit request and are on it. One of
@@ -445,16 +326,10 @@ export default function HeroCalculator() {
                       Website loading speed & mobile optimization audit
                     </span>
                   </li>
-                  {formData.competitorAnalysis && (
-                    <li className="flex items-start gap-2.5 text-xs text-slate-600 dark:text-slate-300">
-                      <span className="text-emerald-500 mt-0.5 shrink-0">
-                        ✓
-                      </span>
-                      <span>
-                        Competitor Google Ads and SEO visibility report
-                      </span>
-                    </li>
-                  )}
+                  <li className="flex items-start gap-2.5 text-xs text-slate-600 dark:text-slate-300">
+                    <span className="text-emerald-500 mt-0.5 shrink-0">✓</span>
+                    <span>Competitor Google Ads and SEO visibility report</span>
+                  </li>
                   <li className="flex items-start gap-2.5 text-xs text-slate-600 dark:text-slate-300">
                     <span className="text-emerald-500 mt-0.5 shrink-0">✓</span>
                     <span>AHPRA advertising compliance guideline check</span>
